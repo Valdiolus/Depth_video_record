@@ -17,6 +17,7 @@ Frames_total = FPS_target*total_seconds
 
 import pyrealsense2 as rs
 from numpy import newaxis, zeros
+a=1
 
 def FPS_CHECK(stp, fps_int, framecount_int, elapsedTime_int, t1_int, t2_int):
 	if(stp == 1):
