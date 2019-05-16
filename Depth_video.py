@@ -36,7 +36,7 @@ def FPS_CHECK(stp, fps_int, framecount_int, elapsedTime_int, t1_int, t2_int):
 
 	return fps_int, framecount_int, elapsedTime_int, t1_int, t2_int
 
-def VIDEO_WRITE(file1, file2):
+def VIDEO_WRITE(file1):
 	fps = ""
 	framecount = 0
 	elapsedTime = 0
@@ -55,10 +55,6 @@ def VIDEO_WRITE(file1, file2):
 
 	# Start streaming
 	pipeline.start(config)
-
-	# create buffer for depth images
-	#color_buffer = zeros((Frames_total,frame_height_target,frame_width_target,3)).astype('uint8')
-	#depth_buffer = zeros((Frames_total,frame_height_target,frame_width_target,3)).astype('uint8')
 
 	while True:#for i in range(color_buffer.shape[0]):
 		# inc FPS
@@ -79,15 +75,8 @@ def VIDEO_WRITE(file1, file2):
 
 		# Convert images to numpy arrays
 		color_image = np.asanyarray(color_frame.get_data())
-		#print(color_image.shape,color_buffer.shape)
-		#color_buffer[i] = color_image
-		#File_write(color_image)	
 		
 		depth_image = np.asanyarray(depth_frame.get_data()).astype('uint8')
-		#depth_image = depth_image[:,:,newaxis]
-		#depth_image = np.append(np.append(depth_image, depth_image, axis=2), depth_image, axis=2)
-		#print(depth_image.shape, depth_buffer.shape)
-		#depth_buffer[i] = depth_image
 
 		# calc and add fps rate
 		#cv2.putText(color_image, fps, (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (38, 0, 255), 1, cv2.LINE_AA)
@@ -103,17 +92,6 @@ def VIDEO_WRITE(file1, file2):
 		# update the FPS counter
 		fps, framecount, elapsedTime, t1, t2 = FPS_CHECK (2, fps, framecount, elapsedTime, t1, t2)
 
-	print("Writing buffers to files!!!")
-	# FILES TO WRITE INIT
-	#color_file = cv2.VideoWriter(file1, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), FPS_target, (frame_width_target, frame_height_target))
-	#depth_file = cv2.VideoWriter(file2, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), FPS_target, (frame_width_target, frame_height_target))
-
-	#for i in range(color_buffer.shape[0]):
-	#	color_file.write(color_buffer[i])
-	#	depth_file.write(depth_buffer[i])
-	#write depth buffer to file
-	#np.savetxt('depth.txt', depth_buffer, fmt="%d", delimiter=',')
-
 	# When everything done, release the video capture and video write objects
 	pipeline.stop()
 
@@ -123,8 +101,6 @@ def VIDEO_WRITE(file1, file2):
 
 def VIDEO_READ(file_in):
 	file = open(file_in, 'r', encoding='ascii', errors='ignore')#cv2.VideoCapture(file_in)
-	#if (file.isOpened() == False):
-	#	print("Error opening file")
 
 	time.sleep(1.0)
 	
@@ -183,9 +159,6 @@ def VIDEO_READ_RSD(file):
 	# Start streaming
 	pipeline.start(config)
 
-	# create buffer for depth images
-	# color_buffer = zeros((Frames_total,frame_height_target,frame_width_target,3)).astype('uint8')
-	# depth_buffer = zeros((Frames_total,frame_height_target,frame_width_target,3)).astype('uint8')
 
 	while True:  # for i in range(color_buffer.shape[0]):
 		# inc FPS
@@ -206,22 +179,15 @@ def VIDEO_READ_RSD(file):
 
 		# Convert images to numpy arrays
 		color_image = np.asanyarray(color_frame.get_data())
-		# print(color_image.shape,color_buffer.shape)
-		# color_buffer[i] = color_image
-		# File_write(color_image)
 
 		depth_image = np.asanyarray(depth_frame.get_data()).astype('uint8')
-		# depth_image = depth_image[:,:,newaxis]
-		# depth_image = np.append(np.append(depth_image, depth_image, axis=2), depth_image, axis=2)
-		# print(depth_image.shape, depth_buffer.shape)
-		# depth_buffer[i] = depth_image
 
 		# calc and add fps rate
 		# cv2.putText(color_image, fps, (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (38, 0, 255), 1, cv2.LINE_AA)
 
 		# SHOW COLOR FRAME
 		cv2.imshow('frame', color_image)
-		cv2.imshow('frame2', depth_image)
+		#cv2.imshow('frame2', depth_image)
 
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			print("Keyboard interrupt")
@@ -230,17 +196,6 @@ def VIDEO_READ_RSD(file):
 		# update the FPS counter
 		fps, framecount, elapsedTime, t1, t2 = FPS_CHECK(2, fps, framecount, elapsedTime, t1, t2)
 
-	print("Writing buffers to files!!!")
-	# FILES TO WRITE INIT
-	# color_file = cv2.VideoWriter(file1, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), FPS_target, (frame_width_target, frame_height_target))
-	# depth_file = cv2.VideoWriter(file2, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), FPS_target, (frame_width_target, frame_height_target))
-
-	# for i in range(color_buffer.shape[0]):
-	#	color_file.write(color_buffer[i])
-	#	depth_file.write(depth_buffer[i])
-	# write depth buffer to file
-	# np.savetxt('depth.txt', depth_buffer, fmt="%d", delimiter=',')
-
 	# When everything done, release the video capture and video write objects
 	pipeline.stop()
 
@@ -248,21 +203,19 @@ def VIDEO_READ_RSD(file):
 	cv2.destroyAllWindows()
 
 def MAIN():
-	now = datetime.now()
 	#dt_string = now.strftime('%d/%m/%Y/%H_%M_%S')
-	videofile1 = 'Video_%s.bag' % datetime.now()#'Color_%s.avi' % datetime.now()
-	videofile2 = 'Depth_%s.avi' % datetime.now()
+	videofile1 = 'Video_%s.bag' % datetime.now()
+	#videofile2 = 'Depth_%s.avi' % datetime.now()
 	print('Videofile name:', videofile1)
 
-	#VIDEO_WRITE(videofile1, videofile2)
+	VIDEO_WRITE(videofile1)
 
 	#time.sleep(5.0)
-	print("SLEEEEEEP")
+	#print("SLEEEEEEP")
 
-	#VIDEO_READ('Video_2019-05-14 19:59:13.603212.bag')
-	VIDEO_READ_RSD('Video_2019-05-14 19:59:13.603212.bag')
-	#VIDEO_READ(videofile2)
-	#print("END OF FILE")
+
+	#VIDEO_READ_RSD(videofile1)
+	print("END OF FILE")
 
 
 MAIN()
