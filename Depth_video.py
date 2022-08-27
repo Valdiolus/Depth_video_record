@@ -1,9 +1,9 @@
 #MIT license by Valdis Gerasymiak
-from imutils.video import VideoStream
-from imutils.video import FPS
+#from imutils.video import VideoStream
+#from imutils.video import FPS
 import numpy as np
 #np.set_printoptions(threshold=np.inf)
-import imutils
+#import imutils
 import time
 import cv2
 import math
@@ -15,7 +15,7 @@ frame_height_target = 480
 total_seconds = 30
 Frames_total = FPS_target*total_seconds
 
-import pyrealsense2 as rs
+import pyrealsense2.pyrealsense2 as rs
 from numpy import newaxis, zeros
 a=1
 
@@ -204,7 +204,9 @@ def VIDEO_READ_RSD(file):
 
 def MAIN():
 	#dt_string = now.strftime('%d/%m/%Y/%H_%M_%S')
-	videofile1 = 'Video_%s.bag' % datetime.now()
+	time_struct = time.gmtime()
+	time_now = str(time_struct.tm_year)+'-'+str(time_struct.tm_mon)+'-'+str(time_struct.tm_mday)+'_'+str(time_struct.tm_hour+3)+'-'+str(time_struct.tm_min)+'-'+str(time_struct.tm_sec)
+	videofile1 = 'Video_%s.bag' % time_now
 	#videofile2 = 'Depth_%s.avi' % datetime.now()
 	print('Videofile name:', videofile1)
 
@@ -214,7 +216,7 @@ def MAIN():
 	#print("SLEEEEEEP")
 
 
-	#VIDEO_READ_RSD(videofile1)
+	VIDEO_READ_RSD(videofile1)
 	print("END OF FILE")
 
 
