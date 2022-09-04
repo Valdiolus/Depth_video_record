@@ -61,7 +61,7 @@ def Thread_record_camera(file_name, color_framebuffer, video_fps):
     out.release()
 
 
-def Thread_read_d435_camera(file_name, rgb_width, rgb_height, rgb_target_fps, d_width, d_height, d_target_fps, rgb_framebuffer):
+def Thread_read_d435_camera(file_name, rgb_width, rgb_height, rgb_target_fps, d_width, d_height, d_target_fps, rgb_framebuffer, detect_framebuffer):
     fps = ""
     framecount = 0
     elapsedTime = 0
@@ -101,7 +101,11 @@ def Thread_read_d435_camera(file_name, rgb_width, rgb_height, rgb_target_fps, d_
 
             if rgb_framebuffer.full():
                 rgb_framebuffer.get()
-            rgb_framebuffer.put(encoded)#cv2.resize(color_image, (320,320), interpolation = cv2.INTER_AREA))
+            rgb_framebuffer.put(encoded)
+
+            if detect_framebuffer.full():
+                detect_framebuffer.get()
+            detect_framebuffer.put(cv2.resize(color_image, (320, 180), interpolation = cv2.INTER_AREA))
 
             # calc and add fps rate
             #cv2.putText(color_image, fps, (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (38, 0, 255), 1, cv2.LINE_AA)
