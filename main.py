@@ -6,7 +6,7 @@ from datetime import datetime
 import multiprocessing as mp
 import pyrealsense2.pyrealsense2 as rs
 from numpy import newaxis, zeros
-import video_record, detect
+import video_record, detector
 
 
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
         processes = []
         # Start streaming
-        p = mp.Process(target=video_record.Thread_read_d435_camera, args=(videofile1, rgb_width, rgb_height, rgb_fps, d_width, d_height, d_fps, colour_framebuffer, detect_framebuffer, ), daemon=True)
+        p = mp.Process(target=video_record.Thread_read_d435_camera, args=(videofile1, rgb_width, rgb_height, rgb_fps, d_width, d_height, d_fps, colour_framebuffer, detect_framebuffer, detector_results, ), daemon=True)
         p.start()
         processes.append(p)
 
@@ -43,9 +43,9 @@ if __name__ == "__main__":
         p.start()
         processes.append(p)
 
-        p = mp.Process(target=detect.Thread_detect, args=(rgb_width, rgb_height, detect_framebuffer, detector_results, ), daemon=True)
-        p.start()
-        processes.append(p)
+        #p = mp.Process(target=detector.Thread_detect, args=(rgb_width, rgb_height, detect_framebuffer, detector_results, ), daemon=True)
+        #p.start()
+        #processes.append(p)
 
         for process in processes:
             process.join()
